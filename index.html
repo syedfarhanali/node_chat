@@ -1,0 +1,31 @@
+<html>
+<head>
+	<title>CHAT APPLICATION</title>
+	<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+	<script src="js/jquery-2.1.4.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/app.css" type="text/css" />
+	
+</head>
+<body>
+	<H1 id="homeHeader">CHAT APPLICATION<H1>
+	<div id="conversationWindow" class="conversationWindow"></div>
+	<textarea id="inputMessage"></textarea>
+	<input type="button" id="sendMessage" value="Send"></input>
+</body>
+</html>
+<script>
+$(document).ready(function(){
+	 var server = io.connect("http://localhost:8000");
+	 var name =  prompt("Enter your name");
+	 server.emit('join',name);
+	$("#sendMessage").click(function(){
+		var message = $("#inputMessage").val();
+		$("#inputMessage").val("");
+		server.emit('messages',message);
+	});
+	
+	server.on('messages',function(message){
+		$("#conversationWindow").append(message);
+	});
+});
+</script>
